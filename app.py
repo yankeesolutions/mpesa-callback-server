@@ -62,12 +62,6 @@ def stk_push():
     return jsonify(response.json())
 
 # CALLBACK ENDPOINT
-@app.route('/stk_callback', methods=['POST'])
-def stk_callback():
-    data = request.get_json()
-    print("Received callback:", json.dumps(data, indent=2))
-    return jsonify({"ResultCode": 0, "ResultDesc": "Received"})
-
 @app.route('/')
 def home():
     return "M-PESA Callback Server is running."
