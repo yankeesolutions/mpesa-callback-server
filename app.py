@@ -71,4 +71,38 @@ def stk_callback():
 @app.route('/')
 def home():
     return "M-PESA Callback Server is running."
+@app.route('/stk_callback', methods=['POST'])
+def stk_callback():
+    data = request.get_json()
+    print("📥 Received STK Callback:\n", json.dumps(data, indent=4))
+
+    try:
+        callback = data['Body']['stkCallback']
+        result_code = callback.get('ResultCode', None)
+        result_desc = callback.get('ResultDesc', '')
+
+        if result_code == 0:
+            # Payment was successful
+            metadata = callback['CallbackMetadata']['Item']
+            parsed = {item['Name']: item.get('Value', '') for item in metadata}
+
+            amount = parsed.get('Amount')
+            phone = parsed.get('PhoneNumber')
+            receipt = parsed.get('MpesaReceiptNumber')
+            date = parsed.get('TransactionDate')
+
+            print("✅ PAYMENT SUCCESS")
+            print(f"Amount: {amount}")
+            print(f"Phone: {phone}")
+            print(f"Receipt: {receipt}")
+            print(f"Date: {date}")
+        else:
+            # Payment failed or cancelled
+            print("❌ PAYMENT FAILED or CANCELED")
+            print(f"Reason: {result_desc}")
+
+    except Exception as e:
+        print("⚠️ Error processing callback:", e)
+
+    return jsonify({"ResultCode": 0, "ResultDesc": "Callback received successfully"})
 
