@@ -1,6 +1,2 @@
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/yankeesolutions/mpesa-callback-server.git
-git push -u origin main
+- main.py
+- requirements.txt
